@@ -1,0 +1,148 @@
+.section {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background-color: var(--color-bg);
+  padding: var(--space-section) var(--space-page-x) var(--space-section-sm);
+  /* Más alto a propósito: el scrub de color y el parallax de columnas
+     necesitan un tramo de scroll largo para notarse — en una sección
+     del alto "normal" del resto del sitio, ambos efectos terminaban
+     casi apenas se entraba a la sección. */
+  /* flex-start (no center): el contenido queda arriba y el espacio
+     extra del min-height cae al final, como un "colchón" ya blanco
+     antes de entrar a la siguiente sección oscura. Centrado dejaba un
+     tramo igual de vacío ANTES del contenido (aún oscuro, sin nada
+     que mirar) que no cumplía ningún propósito. */
+  min-height: 1000px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+@media (max-width: 719.98px) {
+  .section {
+    min-height: 1100px;
+  }
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-size: var(--fs-display-2);
+  line-height: 0.95;
+  text-transform: uppercase;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.copy {
+  max-width: 20rem;
+  font-size: var(--fs-body);
+  color: var(--color-body);
+  line-height: 1.6;
+  padding-top: 0.9rem;
+}
+
+.headlineRight {
+  text-align: right;
+  margin-top: 1rem;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+  /* Color propio (no heredado de .content) para que useColumnParallax
+     pueda animarlo directamente: el ícono (stroke="currentColor") y
+     .badgeLabel (color: inherit) siguen este valor automáticamente. */
+  color: var(--color-body);
+}
+
+.badgeLabel {
+  font-size: var(--fs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: inherit;
+  line-height: 1.5;
+}
+
+/* Galería de columnas a distinta velocidad (useColumnParallax). Cada
+   columna arranca a una altura distinta (stagger) para el efecto de
+   mosaico; el desplazamiento en scroll lo agrega GSAP por encima de
+   esto, no lo reemplaza. */
+.gallery {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  /* align-items normalmente es "stretch": todas las columnas de una
+     misma fila quedan estiradas a la altura de la más alta. Con 5
+     imágenes de alturas distintas (232px a 480px), eso dejaba a las
+     más cortas (ej. terminal) flotando en una caja mucho más alta que
+     la imagen real, con un espacio vacío abajo que se veía como si la
+     imagen estuviera mal recortada. "start" hace que cada columna mida
+     lo que mide su propia imagen. */
+  align-items: start;
+  gap: 1rem;
+  margin-top: clamp(3rem, 7vw, 5rem);
+}
+
+.column {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.column img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Desfase bien marcado (no un detalle sutil): mosaico intencionalmente
+   asimétrico, en zigzag, para que se note como diseño y no como un
+   accidente de alineación. */
+.column:nth-child(1) {
+  margin-top: 0;
+}
+.column:nth-child(2) {
+  margin-top: 8rem;
+}
+.column:nth-child(3) {
+  margin-top: -2rem;
+}
+.column:nth-child(4) {
+  margin-top: 10rem;
+}
+.column:nth-child(5) {
+  margin-top: 4rem;
+}
+
+@media (max-width: 719.98px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 2rem;
+    /* Más separación del texto de arriba que en desktop: en mobile el
+       parallax ya viaja bastante menos (ver useColumnParallax), pero
+       este margen extra es el que evita que la columna más rápida
+       llegue a tapar "IMPACTO GRANDE." al principio del scroll. */
+    margin-top: 6rem;
+  }
+
+  .column:nth-child(n) {
+    margin-top: 0;
+  }
+}

@@ -1,0 +1,75 @@
+.hero {
+  position: relative;
+  z-index: 1;
+  padding: 0 var(--space-page-x) var(--space-section-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* En mobile el Nav queda sticky (ver Nav.module.css) — este padding le
+   da al Hero un respiro deliberado debajo, en vez de depender solo del
+   espacio que deja el propio Nav. */
+@media (max-width: 719.98px) {
+  .hero {
+    padding-top: 2rem;
+  }
+}
+
+.headingReset {
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem 1.5rem;
+}
+
+.rowCenter {
+  align-items: center;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--fs-hero);
+  line-height: 0.94;
+  text-transform: uppercase;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.microLabel {
+  font-size: var(--fs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted-strong);
+  text-align: right;
+  padding-top: 1.1em;
+  white-space: nowrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  padding: 0.6rem 1.1rem;
+  margin-top: 0.6em;
+}
+
+.badgeDot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.badgeText {
+  font-size: 0.8125rem;
+  color: #e8e8e8;
+  white-space: nowrap;
+}

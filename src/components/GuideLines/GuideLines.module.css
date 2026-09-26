@@ -1,0 +1,46 @@
+.parallaxLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.lines {
+  position: absolute;
+  inset: 0;
+  /* Decorativo: un lector de pantalla no gana nada anunciando 4 líneas
+     verticales, así que se saca del árbol de accesibilidad. */
+  display: none;
+}
+
+.line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 1px dashed var(--border-default);
+}
+
+.line:nth-of-type(1) {
+  left: 20%;
+}
+
+.line:nth-of-type(2) {
+  left: 40%;
+}
+
+.line:nth-of-type(3) {
+  left: 60%;
+}
+
+.line:nth-of-type(4) {
+  left: 80%;
+}
+
+/* Por debajo de este ancho las líneas compiten con el contenido en
+   vez de sumar como grilla; se muestran solo en pantallas más anchas. */
+@media (min-width: 960px) {
+  .lines {
+    display: block;
+  }
+}

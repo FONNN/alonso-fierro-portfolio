@@ -1,0 +1,68 @@
+.section {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-section) var(--space-page-x) 0;
+  /* Tema invertido fijo, igual que el Footer que viene justo después:
+     al ser la última sección oscura antes de él, el corte hacia esta
+     sección YA es el cambio de tema oscuro->claro que se busca — no
+     hace falta animar nada, con que sea estática alcanza. */
+  background: var(--color-fg);
+  color: var(--color-bg);
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-size: var(--fs-display-1);
+  line-height: 0.95;
+  text-transform: uppercase;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.headlineRight {
+  text-align: right;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: clamp(2rem, 5vw, 2.75rem);
+}
+
+.caption {
+  max-width: 18rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  color: var(--color-body-inverted);
+  line-height: 1.6;
+}
+
+.photo {
+  width: clamp(110px, 16vw, 140px);
+  height: clamp(80px, 11vw, 100px);
+  background: var(--surface-inverted);
+  border: 1px solid var(--border-inverted);
+  border-radius: var(--radius-md);
+  display: none;
+}
+
+.link {
+  font-size: 0.9375rem;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-strong-inverted);
+  padding-bottom: 0.25rem;
+  transition: opacity 0.5s cubic-bezier(0.52, 0.01, 0, 1);
+}
+
+.link:hover {
+  opacity: 0.7;
+}
+
+@media (min-width: 640px) {
+  .photo {
+    display: block;
+  }
+}

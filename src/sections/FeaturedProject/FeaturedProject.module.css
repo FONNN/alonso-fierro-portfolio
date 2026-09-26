@@ -1,0 +1,97 @@
+.section {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-section) var(--space-page-x) 0;
+}
+
+.eyebrow {
+  text-align: right;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted-strong);
+  margin-bottom: 1rem;
+}
+
+.galleryWrap {
+  margin-top: 2rem;
+}
+
+/* Solo en desktop: en mobile la galería se ve bien a ancho completo,
+   pero en pantallas grandes el bloque se sentía demasiado dominante.
+   Reducción acumulada: 100% -> 85% (-15%) -> 76.5% (-10% más),
+   centrada dentro de la sección. */
+@media (min-width: 720px) {
+  .galleryWrap {
+    max-width: 76.5%;
+    margin-inline: auto;
+  }
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+}
+
+.name a {
+  text-decoration: none;
+}
+
+.name a:hover {
+  text-decoration: underline;
+}
+
+.description {
+  max-width: 30rem;
+  font-size: var(--fs-body);
+  color: var(--color-body);
+  margin: 0 0 0.6rem;
+  line-height: 1.6;
+}
+
+.tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  padding: 0.3rem 0.75rem;
+  color: #d4d4d4;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-strong);
+  justify-content: center;
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: background 0.5s cubic-bezier(0.52, 0.01, 0, 1);
+}
+
+.link:hover {
+  background: var(--surface-2);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-fg);
+  outline-offset: 3px;
+}

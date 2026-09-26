@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "oxc.oxc-vscode",
+    "clinyong.vscode-css-modules",
+    "editorconfig.editorconfig"
+  ]
+}

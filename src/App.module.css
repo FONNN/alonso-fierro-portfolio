@@ -1,0 +1,17 @@
+.root {
+  position: relative;
+  /* Segunda capa de contención horizontal, redundante con html/body en
+     index.css: algunos navegadores embebidos (ej. el de Instagram, un
+     bug real y documentado del propio WebView) no siempre propagan el
+     overflow-x:hidden de <html> de forma confiable.
+
+     A propósito "clip" y no "hidden": probado y confirmado que
+     "hidden" en el eje X fuerza (por spec) a que el eje Y, si estaba
+     en "visible", pase a "auto" — convirtiendo a .root en su propio
+     contenedor de scroll independiente y rompiendo el Nav sticky en
+     mobile (el mismo bug de fondo que ya se había resuelto una vez en
+     html/body, ver index.css). "clip" no dispara esa interdependencia:
+     contiene el overflow horizontal sin tocar el eje Y. */
+  overflow-x: clip;
+  max-width: 100%;
+}

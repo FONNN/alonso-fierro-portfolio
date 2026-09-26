@@ -1,0 +1,87 @@
+.section {
+  position: relative;
+  z-index: 1;
+  padding: 0 var(--space-page-x);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2.5rem;
+  padding-top: var(--space-section-sm);
+}
+
+.bentoWrap {
+  position: relative;
+  flex: 1 1 420px;
+  max-width: 620px;
+}
+
+/* Bento asimétrico de 7 celdas en una grilla de 4x4: dos bloques
+   grandes (a, d) más cuatro celdas angostas/chicas alrededor. Ver
+   IntroPreview.tsx para el mapeo tile -> área. */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  grid-template-areas:
+    'a a b e'
+    'a a b e'
+    'c d d f'
+    'c d d g';
+  gap: 0.6rem;
+  aspect-ratio: 1 / 1;
+}
+
+.tile {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+}
+
+.tileImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 719.98px) {
+  .bento {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-areas:
+      'a b'
+      'c d';
+  }
+
+  /* Solo 4 tiles en mobile (a, b, c, d) — el resto se oculta en vez de
+     achicarse; con 7 celdas comprimidas en una pantalla angosta cada
+     una queda diminuta e ilegible. */
+  .tile:nth-child(5),
+  .tile:nth-child(6),
+  .tile:nth-child(7) {
+    display: none;
+  }
+}
+
+.tag {
+  position: absolute;
+  right: -4px;
+  bottom: -2.2rem;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted-strong);
+  text-align: right;
+  line-height: 1.5;
+}
+
+.headline {
+  flex: 1 1 320px;
+  font-family: var(--font-display);
+  font-size: var(--fs-display-3);
+  line-height: 1;
+  text-transform: uppercase;
+  margin: 0;
+  overflow-wrap: break-word;
+}

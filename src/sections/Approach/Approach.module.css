@@ -1,0 +1,75 @@
+.section {
+  position: relative;
+  z-index: 1;
+  /* --space-section (no el -sm): esta era la única sección con el
+     token chico, lo que la dejaba pegada al Hero/IntroPreview de
+     arriba — el resto del sitio (FeaturedProject, Philosophy) usa el
+     token grande para el mismo padding-top. */
+  padding: var(--space-section) var(--space-page-x) 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.intro {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1 1 320px;
+}
+
+.photo {
+  width: clamp(72px, 9vw, 108px);
+  aspect-ratio: 1;
+  border-radius: var(--radius-pill);
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--border-default);
+}
+
+.textGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.label {
+  font-size: var(--fs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted-strong);
+}
+
+.copy {
+  max-width: 24rem;
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--color-body);
+  margin: 0;
+}
+
+.arrow {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition:
+    transform 0.5s cubic-bezier(0.52, 0.01, 0, 1),
+    background 0.5s cubic-bezier(0.52, 0.01, 0, 1);
+}
+
+.arrow:hover {
+  background: var(--surface-2);
+  transform: translateY(3px);
+}
+
+.arrow:focus-visible {
+  outline: 2px solid var(--color-fg);
+  outline-offset: 3px;
+}

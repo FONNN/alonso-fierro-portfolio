@@ -1,0 +1,61 @@
+/* Fuentes auto-hospedadas: se sirven junto al resto del sitio (sin
+   petición externa a Google Fonts), lo que evita una conexión extra
+   en la carga y funciona sin conexión a internet de terceros. */
+@import '@fontsource/anton/400.css';
+@import '@fontsource/work-sans/400.css';
+@import '@fontsource/work-sans/500.css';
+@import '@fontsource/work-sans/600.css';
+@import '@fontsource/work-sans/700.css';
+
+@import './styles/tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+  /* Evita saltos de layout al aparecer/ocultarse la barra de scroll. */
+  scrollbar-gutter: stable;
+  /* Resguardo: la página NUNCA debe scrollear horizontalmente. Los
+     titulares gigantes ya se manejan con tipografía fluida (clamp) y
+     overflow-wrap, pero esto evita cualquier caso borde.
+     Importante: esto va SOLO en <html>, no repetido en <body>. Poner
+     `overflow-x: hidden` en ambos fuerza (por spec) a que el
+     `overflow-y` de los dos pase a "auto", y con html Y body como
+     contenedores de scroll anidados, `position: sticky` deja de
+     calcular bien contra el viewport (bug real que se vio en el menú
+     mobile: el header dejaba de quedarse pegado arriba). */
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
+  max-width: 100%;
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-body);
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}

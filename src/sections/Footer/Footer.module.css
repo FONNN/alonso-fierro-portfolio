@@ -1,0 +1,108 @@
+/* Único punto del sitio con tema invertido fijo (no animado en scroll,
+   a diferencia de Philosophy): fondo claro, texto oscuro. Es el cierre
+   del sitio y el lugar del CTA principal, así que se separa a
+   propósito del resto (todo oscuro) para que se note como un momento
+   distinto, no un accidente de estilo. */
+.footer {
+  position: relative;
+  z-index: 1;
+  /* padding, no margin: un margin-top dejaría un hueco FUERA del fondo
+     blanco del footer, donde asomaría el fondo oscuro del body detrás
+     (invisible antes de invertir AlwaysUpdated, visible ahora como
+     franja negra entre dos secciones blancas). */
+  padding-top: clamp(4rem, 12vw, 10rem);
+  background: var(--color-fg);
+  color: var(--color-bg);
+}
+
+.pillars {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: clamp(2rem, 6vw, 4rem) var(--space-page-x) 0;
+}
+
+.pillar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-width: 14rem;
+}
+
+.pillarLabel {
+  font-size: var(--fs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-body-inverted);
+}
+
+/* Contexto de apoyo, no protagonista: mismo gris apagado que el
+   label (no negro, no verde de acento) para que el único elemento
+   con color propio en el footer siga siendo el CTA de abajo. Oculto
+   en mobile a propósito (ver media query): en pantallas chicas el
+   objetivo es llegar al botón verde rápido, no leer tres frases
+   antes de verlo. */
+.pillarCaption {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-body-inverted);
+  margin: 0;
+}
+
+@media (max-width: 719.98px) {
+  .pillarCaption {
+    display: none;
+  }
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 3rem var(--space-page-x);
+  text-align: center;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--color-accent);
+  color: var(--color-bg);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-body-lg);
+  padding: 1rem 1.75rem;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  transition: transform 0.5s cubic-bezier(0.52, 0.01, 0, 1);
+}
+
+.cta:hover {
+  transform: translateY(-3px);
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--color-bg);
+  outline-offset: 3px;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: var(--fs-wordmark);
+  line-height: 0.85;
+  text-align: center;
+  text-transform: uppercase;
+  word-break: break-word;
+  padding: 0 var(--space-page-x) clamp(2rem, 6vw, 4rem);
+  margin: 0;
+}
+
+.legal {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-body-inverted);
+  padding-bottom: 2rem;
+}
