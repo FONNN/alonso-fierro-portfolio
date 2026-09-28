@@ -4,6 +4,7 @@
   padding: 0 var(--space-page-x);
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
   gap: 2.5rem;
   padding-top: var(--space-section-sm);
@@ -76,8 +77,13 @@
   line-height: 1.5;
 }
 
+/* grow: 0 (no 1) a propósito: con grow:1 este bloque se estiraba para
+   llenar todo el ancho sobrante de la fila, pero el texto en sí no lo
+   llenaba (queda alineado a la izquierda dentro de su propia caja) —
+   el conjunto grilla+texto se veía pegado a la izquierda con un vacío
+   enorme a la derecha en vez de quedar centrado como bloque. */
 .headline {
-  flex: 1 1 320px;
+  flex: 0 1 380px;
   font-family: var(--font-display);
   font-size: var(--fs-display-3);
   line-height: 1;
