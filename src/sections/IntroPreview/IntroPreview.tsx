@@ -1,18 +1,25 @@
 import { useScrollReveal } from '../../hooks/useScrollReveal';
+import voltoFichaPublica from '../../assets/voltopet/volto-ficha-publica.webp';
+import voltoGuiaEstilo from '../../assets/voltopet/volto-guia-estilo.webp';
 import styles from './IntroPreview.module.css';
 
 /**
- * Imágenes decorativas de relleno (Picsum, seeds fijas para que no
- * cambien en cada carga). No representan proyectos reales — el usuario
- * pidió explícitamente usar un banco de fotos genérico para este bento
- * grid en vez de más capturas de KadiGestión, así que van marcadas como
- * decorativas (alt vacío, grid con aria-hidden) y no como contenido.
+ * La mayoría de los tiles son relleno decorativo (Picsum, seeds fijas
+ * para que no cambien en cada carga) — el usuario pidió explícitamente
+ * un banco de fotos genérico para este bento en vez de más capturas de
+ * KadiGestión, así que van sin alt (grid con aria-hidden) y no como
+ * contenido. Los tiles 'a' y 'd' son la excepción: capturas reales de
+ * Volto (proyecto en desarrollo), puestas ahí porque son las dos
+ * celdas grandes (2x2, ver .bento en el CSS) — en las celdas angostas
+ * 'b'/'c' una imagen tan compuesta (varias pantallas de teléfono) se
+ * recortaría ilegible. También son las únicas 2 de las 7 que siguen
+ * visibles en mobile (ver el nth-child que oculta e/f/g ahí).
  */
 const TILES = [
-  { seed: 'portfolio-bento-1', area: 'a' },
+  { src: voltoFichaPublica, area: 'a' },
   { seed: 'portfolio-bento-2', area: 'b' },
   { seed: 'portfolio-bento-3', area: 'c' },
-  { seed: 'portfolio-bento-4', area: 'd' },
+  { src: voltoGuiaEstilo, area: 'd' },
   { seed: 'portfolio-bento-5', area: 'e' },
   { seed: 'portfolio-bento-6', area: 'f' },
   { seed: 'portfolio-bento-7', area: 'g' },
@@ -32,14 +39,14 @@ export function IntroPreview() {
         <div className={styles.bento} ref={gridRef} aria-hidden="true">
           {TILES.map((tile) => (
             <div
-              key={tile.seed}
+              key={tile.area}
               className={styles.tile}
               data-reveal-repeat
               style={{ gridArea: tile.area }}
             >
               <img
                 className={styles.tileImage}
-                src={`https://picsum.photos/seed/${tile.seed}/600/600`}
+                src={tile.src ?? `https://picsum.photos/seed/${tile.seed}/600/600`}
                 alt=""
                 width={600}
                 height={600}
