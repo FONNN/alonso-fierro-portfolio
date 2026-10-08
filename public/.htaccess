@@ -1,0 +1,45 @@
+# Config para Hostinger (hosting compartido, Apache). Equivalente a
+# public/_headers (que solo Netlify interpreta) + HTTPS/caché, que en
+# Netlify vienen gratis pero en Apache hay que declararlos a mano.
+#
+# Antes de confiar en el bloque HSTS de abajo: confirmar en el panel
+# de Hostinger que el SSL (Let's Encrypt) está activo y renovándose
+# solo. Con HSTS activo y sin HTTPS funcionando, el sitio queda
+# inaccesible por http Y por https roto — revisar esto primero.
+
+<IfModule mod_headers.c>
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+</IfModule>
+
+# Fuerza HTTPS. Si en el panel de Hostinger ya activaste "Force
+# HTTPS", esto queda redundante pero no estorba.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Los archivos en /assets/ salen de Vite con hash en el nombre
+# (ej. index-aYGUzQKy.js): cambian de nombre solo si cambia el
+# contenido, así que se pueden cachear un año entero sin riesgo de
+# servir una versión vieja.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|woff2?|webp|svg)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>

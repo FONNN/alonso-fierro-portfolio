@@ -11,18 +11,14 @@ El archivo [`public/_headers`](../public/_headers) usa la sintaxis de
 tal cual a `dist/` en el build) y define:
 
 - **`Content-Security-Policy` (CSP)**: le dice al navegador de qué
-  orígenes puede cargar cada tipo de recurso. Aquí está configurada
-  como `'self'` en casi todo — es decir, "solo desde este mismo
-  sitio" — porque las fuentes están auto-hospedadas (ver
-  `docs/ARQUITECTURA.md`) y no hay scripts ni estilos de terceros. Una
-  CSP así de estricta bloquea de raíz ataques de tipo XSS que dependan
-  de cargar un script desde un dominio externo. La única excepción es
-  `img-src`, que además de `'self' data:` permite `picsum.photos` y
-  `fastly.picsum.photos` (este último es adonde Picsum redirige la
-  imagen real): son las fotos genéricas de relleno del bento grid en
-  `IntroPreview` (ver `web/src/sections/IntroPreview/IntroPreview.tsx`)
-  — sin esta excepción el navegador las bloquea silenciosamente aunque
-  el código esté bien.
+  orígenes puede cargar cada tipo de recurso. Está configurada como
+  `'self'` en todo — es decir, "solo desde este mismo sitio" — porque
+  las fuentes están auto-hospedadas (ver `docs/ARQUITECTURA.md`) y
+  todas las imágenes del bento grid de `IntroPreview` son capturas
+  reales de proyectos, servidas localmente (ya no hay fotos de bancos
+  de imágenes externos como Picsum, que sí necesitaban una excepción
+  en `img-src`). Una CSP así de estricta bloquea de raíz ataques de
+  tipo XSS que dependan de cargar un script desde un dominio externo.
 - **`X-Frame-Options: DENY`** y **`frame-ancestors 'none'`**: impiden
   que el sitio se pueda incrustar en un `<iframe>` en otra página
   (protección contra _clickjacking_, donde un sitio malicioso superpone
@@ -39,7 +35,11 @@ tal cual a `dist/` en el build) y define:
 Si el sitio se publica en un hosting distinto a Netlify (Vercel,
 Cloudflare Pages, etc.), hay que trasladar estas mismas cabeceras al
 formato de configuración de ese proveedor — el archivo `_headers` tal
-cual solo lo interpreta Netlify.
+cual solo lo interpreta Netlify. Para Hostinger (hosting compartido,
+Apache) ya está hecho: [`public/.htaccess`](../public/.htaccess)
+tiene el equivalente — mismas cabeceras, más forzado de HTTPS y
+caché agresiva para los archivos con hash de `/assets/`, que en
+Apache no vienen gratis como en Netlify.
 
 ## Buenas prácticas ya aplicadas en el código
 
@@ -106,20 +106,35 @@ reales que optimizar (fotos, capturas de proyectos):
 - [x] Reemplazar los placeholders de `src/content/site.ts` (descripción
       y tecnologías del proyecto destacado) — completado 2026-09-18
       revisando el preview real de KadiGestión.
-- [ ] Reemplazar `[Vista previa de un proyecto]` y
-      `[Captura del proyecto]` por capturas reales, en WebP/AVIF.
-- [ ] Reemplazar `[Foto de proceso]` y `[Detalle de código]` si se
-      quiere usar fotos reales (si no, se puede dejar la sección sin
-      esas fotos — ver la regla del proyecto de no usar contenido de
-      relleno).
+- [x] Capturas reales en vez de placeholders — KadiGestión, Volto y
+      Sabor & Romance, todas en WebP.
+- [x] Dominio real (`furastudio.org`) en `og:url` (`index.html`),
+      `public/sitemap.xml` y `public/robots.txt` — completado
+      2026-10-08.
+- [x] Cabeceras de seguridad listas para Hostinger —
+      [`public/.htaccess`](../public/.htaccess), equivalente a
+      `public/_headers` (Netlify) pero en sintaxis Apache.
 - [ ] Agregar `public/og-image.png` (1200×630) — es la imagen que se
       muestra al compartir el link en LinkedIn/WhatsApp/X. Sin este
       archivo, esas vistas previas salen sin imagen.
-- [ ] Reemplazar `[URL_DEL_SITIO_PUBLICADO]` en `index.html`
-      (etiqueta `og:url`) por el dominio real una vez publicado.
 - [ ] Correr `npm run typecheck && npm run lint && npm run build`
       sin errores.
 - [ ] Revisar el sitio en un teléfono real (no solo en el navegador
       de escritorio) antes de publicar.
-- [ ] Si se publica en un hosting que no sea Netlify, trasladar las
-      cabeceras de `public/_headers` al formato de ese proveedor.
+
+### Al momento de mover el sitio a Hostinger
+
+- [ ] Confirmar que `furastudio.org` ya apunta al hosting de Hostinger
+      (DNS propagado) antes de anunciar el link.
+- [ ] Activar SSL (Let's Encrypt) en el panel de Hostinger y
+      verificar con `curl -I https://furastudio.org` que responde
+      200 — recién ahí el bloque HSTS de `.htaccess` es seguro
+      (si HTTPS no funciona y HSTS ya está activo, el sitio queda
+      inaccesible).
+- [ ] Subir el contenido de `dist/` (no el repo completo) a la
+      carpeta pública del hosting (`public_html/` en Hostinger).
+- [ ] Si Hostinger expone una URL temporal antes del cambio de DNS,
+      no dejarla indexable (ya sea con `noindex` o bloqueándola) para
+      evitar contenido duplicado en buscadores.
+- [ ] Enviar `https://furastudio.org/sitemap.xml` a Google Search
+      Console una vez el dominio esté realmente sirviendo el sitio.
