@@ -16,18 +16,23 @@
   max-width: 620px;
 }
 
-/* Bento asimétrico de 7 celdas en una grilla de 4x4: dos bloques
-   grandes (a, d) más cuatro celdas angostas/chicas alrededor. Ver
-   IntroPreview.tsx para el mapeo tile -> área. */
+/* Grilla de 6x6 (ver IntroPreview.tsx para qué imagen va en cada
+   área): fila superior = 'top1'/'top2', dos celdas anchas (3x2, misma
+   proporción) para mostrar la imagen completa sin recortarla a un
+   fragmento angosto. Fila inferior = 'tall1'/'tall2' (2x4, angostas)
+   más 'sq1'/'sq2' apiladas en la tercera columna (2x2 cada una,
+   cuadradas). */
 .bento {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 1fr);
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(6, 1fr);
   grid-template-areas:
-    'a a b e'
-    'a a b e'
-    'c d d f'
-    'c d d g';
+    'top1 top1 top1 top2 top2 top2'
+    'top1 top1 top1 top2 top2 top2'
+    'tall1 tall1 tall2 tall2 sq1 sq1'
+    'tall1 tall1 tall2 tall2 sq1 sq1'
+    'tall1 tall1 tall2 tall2 sq2 sq2'
+    'tall1 tall1 tall2 tall2 sq2 sq2';
   gap: 0.6rem;
   aspect-ratio: 1 / 1;
 }
@@ -47,20 +52,19 @@
 }
 
 @media (max-width: 719.98px) {
+  /* Solo las 4 celdas de Volto/Sabor & Romance ('top1/top2/tall1/
+     tall2'), en un 2x2 parejo — 'sq1'/'sq2' (KadiGestión) no tienen
+     celda nombrada aquí, así que sin el display:none de abajo el
+     navegador las auto-posicionaría igual en vez de desaparecer. */
   .bento {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
     grid-template-areas:
-      'a b'
-      'c d';
+      'top1 top2'
+      'tall1 tall2';
   }
 
-  /* Solo 4 tiles en mobile (a, b, c, d) — el resto se oculta en vez de
-     achicarse; con 7 celdas comprimidas en una pantalla angosta cada
-     una queda diminuta e ilegible. */
-  .tile:nth-child(5),
-  .tile:nth-child(6),
-  .tile:nth-child(7) {
+  .tile[data-desktop-only] {
     display: none;
   }
 }
