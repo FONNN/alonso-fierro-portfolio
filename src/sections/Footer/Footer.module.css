@@ -95,26 +95,10 @@
   padding: 0 var(--space-page-x) clamp(2rem, 6vw, 4rem);
 }
 
-.wordmarkImgMobile {
+.wordmarkImg {
   display: block;
-  width: clamp(4rem, 20vw, 6rem);
-  height: auto;
-}
-
-.wordmarkImgDesktop {
-  display: none;
   width: min(90%, 36rem);
   height: auto;
-}
-
-@media (min-width: 720px) {
-  .wordmarkImgMobile {
-    display: none;
-  }
-
-  .wordmarkImgDesktop {
-    display: block;
-  }
 }
 
 .legal {

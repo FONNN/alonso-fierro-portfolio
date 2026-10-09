@@ -36,13 +36,13 @@
 
 .logoMobile {
   display: block;
-  height: 46px;
+  height: 51px;
   width: auto;
 }
 
 .logoDesktop {
   display: none;
-  height: 53px;
+  height: 58px;
   width: auto;
 }
 
@@ -72,11 +72,16 @@
 
 /* --- Botón hamburguesa / X (solo mobile) --- */
 
+/* Mismo alto que .logoMobile (51px) a propósito — ver Nav.tsx: el
+   usuario pidió que el botón quedara del mismo tamaño que el logo.
+   Las líneas de adentro (.iconBars/.bar) están escaladas en la misma
+   proporción que el botón original (40px -> 51px, factor ~1.275), no
+   son valores nuevos inventados. */
 .menuButton {
   position: relative;
   z-index: 2;
-  width: 40px;
-  height: 40px;
+  width: 51px;
+  height: 51px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,8 +95,8 @@
 
 .iconBars {
   position: relative;
-  width: 20px;
-  height: 14px;
+  width: 26px;
+  height: 18px;
   display: block;
 }
 
@@ -99,7 +104,7 @@
   position: absolute;
   left: 0;
   width: 100%;
-  height: 1.5px;
+  height: 2px;
   background: var(--color-fg);
   transition:
     transform 0.5s cubic-bezier(0.52, 0.01, 0, 1),
@@ -112,17 +117,17 @@
 }
 
 .bar:nth-child(2) {
-  top: 6px;
+  top: 8px;
 }
 
 .bar:nth-child(3) {
-  top: 12px;
+  top: 16px;
 }
 
 /* Hamburguesa -> X: la línea del medio se desvanece, las otras dos
    se mueven al centro y rotan 45°/-45°. */
 .iconBars[data-open] .bar:nth-child(1) {
-  top: 6px;
+  top: 8px;
   transform: rotate(45deg);
 }
 
@@ -131,7 +136,7 @@
 }
 
 .iconBars[data-open] .bar:nth-child(3) {
-  top: 6px;
+  top: 8px;
   transform: rotate(-45deg);
 }
 
