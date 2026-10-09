@@ -3,6 +3,8 @@ import { site } from '../../content/site';
 import { useMountReveal } from '../../hooks/useMountReveal';
 import { gsap, useGSAP } from '../../lib/gsapConfig';
 import { pauseSmoothScroll, resumeSmoothScroll } from '../../lib/smoothScroll';
+import logoDesktop from '../../assets/logo/logo-desktop-blanco.svg';
+import logoMobile from '../../assets/logo/logo-mobile-blanco.svg';
 import styles from './Nav.module.css';
 
 const NAV_LINKS = [
@@ -77,9 +79,19 @@ export function Nav() {
   return (
     <header className={styles.nav} ref={ref}>
       <div className={styles.brand} data-reveal>
-        {/* Cuando haya un logo real, la imagen va acá, antes o en vez
-            del texto — el contenedor ya está pensado para las dos cosas. */}
-        <span className={styles.logo}>{site.name}</span>
+        {/* Dos SVG, uno por breakpoint (ver Nav.module.css): el de
+            mobile es solo el ícono (sin texto, pensado para el header
+            angosto), el de desktop es el lockup completo con el
+            wordmark. Ambos en blanco porque el Nav vive siempre sobre
+            fondo oscuro. */}
+        <img className={styles.logoMobile} src={logoMobile} alt={site.name} width={32} height={32} />
+        <img
+          className={styles.logoDesktop}
+          src={logoDesktop}
+          alt={site.name}
+          width={194}
+          height={62}
+        />
       </div>
 
       <span className={styles.status} data-reveal>

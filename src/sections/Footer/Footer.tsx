@@ -1,5 +1,7 @@
 import { site } from '../../content/site';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
+import logoDesktop from '../../assets/logo/logo-desktop.svg';
+import logoMobile from '../../assets/logo/logo-mobile.svg';
 import styles from './Footer.module.css';
 
 const BOOKING_URL = 'https://calendar.app.google/fzyqRiMxs83sZEh59';
@@ -47,9 +49,19 @@ export function Footer() {
         </a>
       </div>
 
-      <p className={styles.wordmark} data-reveal>
-        {site.name}
-      </p>
+      <div className={styles.wordmark} data-reveal>
+        {/* Versión negra (fondo claro del footer, ver Footer.module.css
+            arriba) — mismo lockup que el Nav pero en negro en vez de
+            blanco. */}
+        <img className={styles.wordmarkImgMobile} src={logoMobile} alt={site.name} width={62} height={62} />
+        <img
+          className={styles.wordmarkImgDesktop}
+          src={logoDesktop}
+          alt={site.name}
+          width={1943}
+          height={620}
+        />
+      </div>
 
       <p className={styles.legal} data-reveal>
         © {year} {site.name}

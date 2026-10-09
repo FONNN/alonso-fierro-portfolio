@@ -34,12 +34,16 @@
   gap: 0.6rem;
 }
 
-.logo {
-  font-family: var(--font-display);
-  font-size: 1.125rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  white-space: nowrap;
+.logoMobile {
+  display: block;
+  height: 46px;
+  width: auto;
+}
+
+.logoDesktop {
+  display: none;
+  height: 53px;
+  width: auto;
 }
 
 .status {
@@ -198,5 +202,13 @@
   .menuButton,
   .panel {
     display: none;
+  }
+
+  .logoMobile {
+    display: none;
+  }
+
+  .logoDesktop {
+    display: block;
   }
 }
