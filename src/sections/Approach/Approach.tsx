@@ -28,7 +28,7 @@ export function Approach() {
 
           <p className={styles.copy} data-reveal>
             Soy Alonso Fierro Urrutia, desarrollador web y diseñador UX/UI — Furastudio es donde
-            junto ambos oficios.
+            uno ambos mundos.
             <br />
             <br />
             Ya sea una landing de marketing o una plataforma completa, priorizo código mantenible,
