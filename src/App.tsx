@@ -21,10 +21,10 @@ function App() {
   return (
     <div className={styles.root}>
       <AmbientGlow />
-      <ParticleVeil />
       <GuideLines />
       <Nav />
-      <main>
+      <main className={styles.main}>
+        <ParticleVeil />
         <Hero />
         <IntroPreview />
         <Approach />

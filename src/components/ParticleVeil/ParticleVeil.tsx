@@ -1,11 +1,15 @@
 import { useEffect, useRef } from 'react';
 import styles from './ParticleVeil.module.css';
 
-const STRANDS = 4;
+const STRANDS = 6;
 const POINTS_PER_STRAND = 46;
 const AMPLITUDE = 85;
 const WAVELENGTH = 520;
-const STRAND_GAP = 95; // separación horizontal entre pliegues del "pañuelo"
+// Con más tiras, menos separación entre ellas (antes 95 para 4) —
+// mantiene el mismo ancho total del pañuelo pero más tupido/denso,
+// que es lo que lo hace leerse más como tela y menos como hilos
+// sueltos.
+const STRAND_GAP = 58;
 const TOP_MARGIN = 110; // que no arranque pegado al Nav
 const COLOR = '61, 220, 90'; // --color-accent en rgb
 
