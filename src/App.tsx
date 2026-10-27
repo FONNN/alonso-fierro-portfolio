@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { AmbientGlow } from './components/AmbientGlow/AmbientGlow';
+import { ParticleField } from './components/ParticleField/ParticleField';
 import { GuideLines } from './components/GuideLines/GuideLines';
 import { Nav } from './sections/Nav/Nav';
 import { Hero } from './sections/Hero/Hero';
@@ -20,6 +21,7 @@ function App() {
   return (
     <div className={styles.root}>
       <AmbientGlow />
+      <ParticleField />
       <GuideLines />
       <Nav />
       <main>
