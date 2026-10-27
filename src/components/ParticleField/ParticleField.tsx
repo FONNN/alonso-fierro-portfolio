@@ -1,49 +1,64 @@
 import { useEffect, useRef } from 'react';
-import { useParallax } from '../../hooks/useParallax';
 import styles from './ParticleField.module.css';
 
 interface Particle {
   x: number;
   y: number;
-  r: number;
+  size: number;
   vx: number;
   vy: number;
   alpha: number;
+  /** Qué tan rápido se desplaza esta partícula respecto al scroll (0-1) — da profundidad real, no una sola capa pareja. */
+  depth: number;
 }
 
-const COUNT = 70;
-const COLOR = '61, 220, 90'; // --color-accent en rgb, para poder variar alpha por partícula
+const COUNT = 90;
+const COLOR = '61, 220, 90'; // --color-accent en rgb, para variar alpha por partícula
 
 function makeParticles(width: number, height: number): Particle[] {
   return Array.from({ length: COUNT }, () => ({
     x: Math.random() * width,
     y: Math.random() * height,
-    r: 0.6 + Math.random() * 1.8,
+    size: 3 + Math.random() * 5,
     vx: (Math.random() - 0.5) * 0.08,
     vy: (Math.random() - 0.5) * 0.08,
-    alpha: 0.15 + Math.random() * 0.45,
+    alpha: 0.35 + Math.random() * 0.5,
+    depth: 0.03 + Math.random() * 0.12,
   }));
 }
 
+function drawDiamond(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, alpha: number) {
+  ctx.beginPath();
+  ctx.moveTo(x, y - size);
+  ctx.lineTo(x + size, y);
+  ctx.lineTo(x, y + size);
+  ctx.lineTo(x - size, y);
+  ctx.closePath();
+  ctx.fillStyle = `rgba(${COLOR}, ${alpha})`;
+  ctx.fill();
+}
+
 /**
- * Polvo de partículas verdes flotando todo el alto de la página,
- * detrás del contenido — versión propia (no copiada) de un efecto de
- * "nube animada" visto en un sitio de referencia (Dala). Se dibuja en
- * canvas 2D (sin librerías nuevas, sin WebGL) en vez de con cientos de
- * nodos DOM, y se apoya en `useParallax` (mismo hook que ya usa
- * AmbientGlow) para que la capa entera se desplace a su propio ritmo
- * con el scroll.
+ * Polvo de rombos verdes flotando todo el alto de la página, detrás
+ * del contenido — misma figura que el ícono de Furastudio (no un
+ * círculo genérico ni los triángulos de la referencia de Dala).
+ * Canvas 2D puro (sin librerías nuevas, sin WebGL).
  *
- * Respeta `prefers-reduced-motion`: si está activo, se dibuja un solo
- * frame estático y no arranca el loop de animación.
+ * El parallax es por partícula, no de toda la capa junta: cada una
+ * tiene su propio `depth`, así que al hacer scroll unas se desplazan
+ * más rápido que otras — da sensación de profundidad real en vez de
+ * una sola capa pegada moviéndose pareja.
+ *
+ * Respeta `prefers-reduced-motion`: si está activo, dibuja un solo
+ * frame estático (sin drift propio ni parallax) y no arranca el loop.
  */
 export function ParticleField() {
-  const parallaxRef = useParallax<HTMLDivElement>({ distance: -90 });
+  const layerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const layer = parallaxRef.current;
+    const layer = layerRef.current;
     if (!canvas || !layer) return;
 
     const ctx = canvas.getContext('2d');
@@ -60,17 +75,16 @@ export function ParticleField() {
       height = layer.offsetHeight;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       particles = makeParticles(width, height);
     };
 
     const draw = () => {
+      const scrollY = window.scrollY;
       ctx.clearRect(0, 0, width, height);
       for (const p of particles) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${COLOR}, ${p.alpha})`;
-        ctx.fill();
+        const offsetY = (((p.y - scrollY * p.depth) % height) + height) % height;
+        drawDiamond(ctx, p.x, offsetY, p.size, p.alpha);
       }
     };
 
@@ -78,10 +92,10 @@ export function ParticleField() {
       for (const p of particles) {
         p.x += p.vx;
         p.y += p.vy;
-        if (p.x < 0) p.x = width;
-        if (p.x > width) p.x = 0;
-        if (p.y < 0) p.y = height;
-        if (p.y > height) p.y = 0;
+        if (p.x < 0) p.x += width;
+        if (p.x > width) p.x -= width;
+        if (p.y < 0) p.y += height;
+        if (p.y > height) p.y -= height;
       }
       draw();
       frameId = requestAnimationFrame(tick);
@@ -106,10 +120,10 @@ export function ParticleField() {
       window.removeEventListener('resize', onResize);
       if (frameId) cancelAnimationFrame(frameId);
     };
-  }, [parallaxRef]);
+  }, []);
 
   return (
-    <div className={styles.layer} aria-hidden="true" ref={parallaxRef}>
+    <div className={styles.layer} aria-hidden="true" ref={layerRef}>
       <canvas className={styles.canvas} ref={canvasRef} />
     </div>
   );

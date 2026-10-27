@@ -1,3 +1,4 @@
+import { site } from '../../content/site';
 import { useMountReveal } from '../../hooks/useMountReveal';
 import styles from './Hero.module.css';
 
@@ -39,6 +40,25 @@ export function Hero() {
           WEB.
         </span>
       </h1>
+
+      <a
+        href={site.bookingUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.cta}
+        data-reveal
+      >
+        Agenda una llamada
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M4 12h16M14 6l6 6-6 6"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </a>
     </div>
   );
 }

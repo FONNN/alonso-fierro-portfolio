@@ -73,3 +73,32 @@
   color: #e8e8e8;
   white-space: nowrap;
 }
+
+/* Mismo botón que el CTA del Footer (ver Footer.module.css) — se
+   repite acá para que se pueda agendar sin bajar hasta el final del
+   sitio. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  align-self: flex-start;
+  margin-top: 1.5rem;
+  background: var(--color-accent);
+  color: var(--color-bg);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-body-lg);
+  padding: 1rem 1.75rem;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  transition: transform 0.5s cubic-bezier(0.52, 0.01, 0, 1);
+}
+
+.cta:hover {
+  transform: translateY(-3px);
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--color-fg);
+  outline-offset: 3px;
+}
