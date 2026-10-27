@@ -11,12 +11,22 @@ const WAVELENGTH = 520;
 // sueltos.
 const STRAND_GAP = 58;
 const TOP_MARGIN = 110; // que no arranque pegado al Nav
-const COLOR = '61, 220, 90'; // --color-accent en rgb
+const COLOR_DARK_ZONE = '61, 220, 90'; // --color-accent, para el resto del sitio (fondo oscuro)
+const COLOR_LIGHT_ZONE = '5, 5, 5'; // --color-bg, para secciones con tema invertido (fondo claro)
+const HERO_ANCHOR_Y = 400; // centro visual aproximado del Hero, donde el pañuelo arranca "armado"
+const SCATTER_STRENGTH = 130; // cuánto se dispersa cada punto en el tramo entre los dos anclajes
 
-interface Point {
-  x: number;
-  y: number;
+interface PointSeed {
+  strand: number;
+  index: number;
   size: number;
+  scatterX: number;
+  scatterY: number;
+}
+
+interface Zone {
+  top: number;
+  bottom: number;
 }
 
 /**
@@ -34,10 +44,27 @@ interface Point {
  * solo flotar aparte. Un reloj lento se suma para que también se vea
  * vivo sin scrollear.
  *
+ * Se arma en el Hero, se dispersa al bajar, y se vuelve a armar justo
+ * en Approach (`#sobre-mi`) — cada punto tiene su propio desvío fijo
+ * (`scatterX/scatterY`, generado una sola vez) que se mezcla según
+ * qué tan lejos esté de alguno de los dos anclajes; entre ambos el
+ * desvío llega a su máximo (sensación de "se desarma"), en los
+ * anclajes vuelve a 0 (forma limpia). Después de Approach sigue como
+ * cinta continua por el resto del sitio, sin más dispersión.
+ *
+ * Cambia de color según la sección de fondo: verde en el resto del
+ * sitio (oscuro), oscuro sobre las secciones con tema invertido
+ * (fondo claro, hoy solo AlwaysUpdated — detectada por
+ * `[data-theme="light"]`). Por eso la capa va POR ENCIMA del
+ * contenido (antes iba detrás y quedaba invisible sobre esas
+ * secciones, tapada por su fondo opaco) — las líneas son finas y
+ * `pointer-events: none`, así que nunca bloquea clics.
+ *
  * Canvas 2D puro (sin librerías nuevas). Rombos dibujados solo de
  * contorno (`stroke`, no `fill`) — el aspecto "solo vértices" pedido.
  * Respeta `prefers-reduced-motion`: dibuja un solo frame estático
- * (fase fija en 0) y no arranca el loop.
+ * (fase y dispersión fijas en su valor de reposo) y no arranca el
+ * loop.
  */
 export function ParticleVeil() {
   const layerRef = useRef<HTMLDivElement>(null);
@@ -56,6 +83,25 @@ export function ParticleVeil() {
     let height = 0;
     let frameId: number | undefined;
     let centerX = 0;
+    let approachAnchorY = 1400;
+    let lightZones: Zone[] = [];
+    let seeds: PointSeed[] = [];
+
+    const makeSeeds = () => {
+      const result: PointSeed[] = [];
+      for (let s = 0; s < STRANDS; s++) {
+        for (let i = 0; i < POINTS_PER_STRAND; i++) {
+          result.push({
+            strand: s,
+            index: i,
+            size: 3 + ((i + s) % 3),
+            scatterX: (Math.random() - 0.5) * 2,
+            scatterY: (Math.random() - 0.5) * 2,
+          });
+        }
+      }
+      return result;
+    };
 
     const resize = () => {
       width = layer.offsetWidth;
@@ -67,34 +113,62 @@ export function ParticleVeil() {
       // secciones dejan más espacio libre (el texto suele ir a la
       // izquierda) — así no compite con el contenido.
       centerX = width * 0.76;
+      seeds = makeSeeds();
+
+      const layerTop = layer.getBoundingClientRect().top + window.scrollY;
+      const approach = document.getElementById('sobre-mi');
+      approachAnchorY = approach
+        ? approach.getBoundingClientRect().top + window.scrollY - layerTop + approach.offsetHeight / 2
+        : 1400;
+
+      lightZones = Array.from(document.querySelectorAll<HTMLElement>('[data-theme="light"]')).map((el) => {
+        const rect = el.getBoundingClientRect();
+        const top = rect.top + window.scrollY - layerTop;
+        return { top, bottom: top + rect.height };
+      });
     };
 
-    const strandPoint = (strand: number, i: number, phase: number): Point => {
-      const y = TOP_MARGIN + (i / (POINTS_PER_STRAND - 1)) * (height - TOP_MARGIN);
-      const strandOffset = (strand - (STRANDS - 1) / 2) * STRAND_GAP;
+    // 0 en los dos anclajes (forma limpia), máximo a mitad de camino
+    // entre ambos (dispersión total); 0 fuera de ese tramo.
+    const scatterFactor = (y: number) => {
+      if (y <= HERO_ANCHOR_Y || y >= approachAnchorY) return 0;
+      const t = (y - HERO_ANCHOR_Y) / (approachAnchorY - HERO_ANCHOR_Y);
+      return Math.sin(t * Math.PI);
+    };
+
+    const colorFor = (y: number) => {
+      const inLightZone = lightZones.some((z) => y >= z.top && y <= z.bottom);
+      return inLightZone ? COLOR_LIGHT_ZONE : COLOR_DARK_ZONE;
+    };
+
+    const strandPosition = (seed: PointSeed, phase: number) => {
+      const baseY = TOP_MARGIN + (seed.index / (POINTS_PER_STRAND - 1)) * (height - TOP_MARGIN);
+      const strandOffset = (seed.strand - (STRANDS - 1) / 2) * STRAND_GAP;
       // Cada tira con su propia longitud de onda (no un múltiplo
       // exacto de las otras): así se separan y se juntan sin quedar
       // nunca sincronizadas del todo, como pliegues reales de tela —
-      // con la misma onda para las 4, convergían en un hilo fino.
-      const strandWavelength = WAVELENGTH * (1 + (strand - (STRANDS - 1) / 2) * 0.17);
+      // con la misma onda para todas, convergían en un hilo fino.
+      const strandWavelength = WAVELENGTH * (1 + (seed.strand - (STRANDS - 1) / 2) * 0.17);
       const sway =
-        Math.sin(y / strandWavelength + phase + strand * 1.3) * AMPLITUDE +
-        Math.sin(y / (strandWavelength * 0.37) + phase * 1.6 + strand) * (AMPLITUDE * 0.22);
+        Math.sin(baseY / strandWavelength + phase + seed.strand * 1.3) * AMPLITUDE +
+        Math.sin(baseY / (strandWavelength * 0.37) + phase * 1.6 + seed.strand) * (AMPLITUDE * 0.22);
+      const scatterAmount = scatterFactor(baseY);
+      const scatter = scatterAmount * SCATTER_STRENGTH;
       return {
-        x: centerX + strandOffset + sway,
-        y,
-        size: 3 + ((i + strand) % 3),
+        x: centerX + strandOffset + sway + seed.scatterX * scatter,
+        y: baseY + seed.scatterY * scatter,
+        scatterAmount,
       };
     };
 
-    const drawDiamond = (x: number, y: number, size: number, alpha: number) => {
+    const drawDiamond = (x: number, y: number, size: number, alpha: number, color: string) => {
       ctx.beginPath();
       ctx.moveTo(x, y - size);
       ctx.lineTo(x + size, y);
       ctx.lineTo(x, y + size);
       ctx.lineTo(x - size, y);
       ctx.closePath();
-      ctx.strokeStyle = `rgba(${COLOR}, ${alpha})`;
+      ctx.strokeStyle = `rgba(${color}, ${alpha})`;
       ctx.lineWidth = 1.2;
       ctx.stroke();
     };
@@ -102,18 +176,25 @@ export function ParticleVeil() {
     const draw = (phase: number) => {
       ctx.clearRect(0, 0, width, height);
       for (let s = 0; s < STRANDS; s++) {
-        let prev: Point | null = null;
+        let prev: { x: number; y: number } | null = null;
         for (let i = 0; i < POINTS_PER_STRAND; i++) {
-          const p = strandPoint(s, i, phase);
+          const seed = seeds[s * POINTS_PER_STRAND + i];
+          const p = strandPosition(seed, phase);
+          const color = colorFor(p.y);
+          // La línea que conecta con el punto anterior se desvanece
+          // con la dispersión: a tela entera se ven las líneas, a
+          // dispersión máxima solo quedan los rombos sueltos — así
+          // "se desarma" en vez de verse como una maraña de hilos
+          // cruzados.
           if (prev) {
             ctx.beginPath();
             ctx.moveTo(prev.x, prev.y);
             ctx.lineTo(p.x, p.y);
-            ctx.strokeStyle = `rgba(${COLOR}, 0.18)`;
+            ctx.strokeStyle = `rgba(${color}, ${0.18 * (1 - p.scatterAmount)})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
-          drawDiamond(p.x, p.y, p.size, 0.6);
+          drawDiamond(p.x, p.y, seed.size, 0.6, color);
           prev = p;
         }
       }
