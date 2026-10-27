@@ -11,8 +11,7 @@ const WAVELENGTH = 520;
 // sueltos.
 const STRAND_GAP = 58;
 const TOP_MARGIN = 110; // que no arranque pegado al Nav
-const COLOR_DARK_ZONE = '61, 220, 90'; // --color-accent, para el resto del sitio (fondo oscuro)
-const COLOR_LIGHT_ZONE = '5, 5, 5'; // --color-bg, para secciones con tema invertido (fondo claro)
+const COLOR = '61, 220, 90'; // --color-accent en rgb, fijo para todo el sitio
 const HERO_ANCHOR_Y = 400; // centro visual aproximado del Hero, donde el pañuelo arranca "armado"
 const SCATTER_STRENGTH = 130; // cuánto se dispersa cada punto en el tramo entre los dos anclajes
 
@@ -22,11 +21,6 @@ interface PointSeed {
   size: number;
   scatterX: number;
   scatterY: number;
-}
-
-interface Zone {
-  top: number;
-  bottom: number;
 }
 
 /**
@@ -52,13 +46,13 @@ interface Zone {
  * anclajes vuelve a 0 (forma limpia). Después de Approach sigue como
  * cinta continua por el resto del sitio, sin más dispersión.
  *
- * Cambia de color según la sección de fondo: verde en el resto del
- * sitio (oscuro), oscuro sobre las secciones con tema invertido
- * (fondo claro, hoy solo AlwaysUpdated — detectada por
- * `[data-theme="light"]`). Por eso la capa va POR ENCIMA del
- * contenido (antes iba detrás y quedaba invisible sobre esas
- * secciones, tapada por su fondo opaco) — las líneas son finas y
- * `pointer-events: none`, así que nunca bloquea clics.
+ * Un solo color fijo para todo el sitio (no cambia por sección): se
+ * probó que cambiara de color sobre las secciones con tema claro,
+ * pero para eso la capa tenía que ir POR ENCIMA del contenido en vez
+ * de detrás, y terminaba traslapándose visualmente con otras
+ * estructuras. Vuelve a ir detrás (como el resto de las capas
+ * ambiente del sitio) — invisible sobre AlwaysUpdated, que tiene
+ * fondo opaco propio, pero sin pisar nada en el resto del recorrido.
  *
  * Canvas 2D puro (sin librerías nuevas). Rombos dibujados solo de
  * contorno (`stroke`, no `fill`) — el aspecto "solo vértices" pedido.
@@ -84,7 +78,6 @@ export function ParticleVeil() {
     let frameId: number | undefined;
     let centerX = 0;
     let approachAnchorY = 1400;
-    let lightZones: Zone[] = [];
     let seeds: PointSeed[] = [];
 
     const makeSeeds = () => {
@@ -120,12 +113,6 @@ export function ParticleVeil() {
       approachAnchorY = approach
         ? approach.getBoundingClientRect().top + window.scrollY - layerTop + approach.offsetHeight / 2
         : 1400;
-
-      lightZones = Array.from(document.querySelectorAll<HTMLElement>('[data-theme="light"]')).map((el) => {
-        const rect = el.getBoundingClientRect();
-        const top = rect.top + window.scrollY - layerTop;
-        return { top, bottom: top + rect.height };
-      });
     };
 
     // 0 en los dos anclajes (forma limpia), máximo a mitad de camino
@@ -134,11 +121,6 @@ export function ParticleVeil() {
       if (y <= HERO_ANCHOR_Y || y >= approachAnchorY) return 0;
       const t = (y - HERO_ANCHOR_Y) / (approachAnchorY - HERO_ANCHOR_Y);
       return Math.sin(t * Math.PI);
-    };
-
-    const colorFor = (y: number) => {
-      const inLightZone = lightZones.some((z) => y >= z.top && y <= z.bottom);
-      return inLightZone ? COLOR_LIGHT_ZONE : COLOR_DARK_ZONE;
     };
 
     const strandPosition = (seed: PointSeed, phase: number) => {
@@ -180,7 +162,6 @@ export function ParticleVeil() {
         for (let i = 0; i < POINTS_PER_STRAND; i++) {
           const seed = seeds[s * POINTS_PER_STRAND + i];
           const p = strandPosition(seed, phase);
-          const color = colorFor(p.y);
           // La línea que conecta con el punto anterior se desvanece
           // con la dispersión: a tela entera se ven las líneas, a
           // dispersión máxima solo quedan los rombos sueltos — así
@@ -190,11 +171,11 @@ export function ParticleVeil() {
             ctx.beginPath();
             ctx.moveTo(prev.x, prev.y);
             ctx.lineTo(p.x, p.y);
-            ctx.strokeStyle = `rgba(${color}, ${0.18 * (1 - p.scatterAmount)})`;
+            ctx.strokeStyle = `rgba(${COLOR}, ${0.18 * (1 - p.scatterAmount)})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
-          drawDiamond(p.x, p.y, seed.size, 0.6, color);
+          drawDiamond(p.x, p.y, seed.size, 0.6, COLOR);
           prev = p;
         }
       }

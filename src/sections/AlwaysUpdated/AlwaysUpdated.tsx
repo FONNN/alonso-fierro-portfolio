@@ -5,7 +5,7 @@ export function AlwaysUpdated() {
   const ref = useScrollReveal<HTMLDivElement>();
 
   return (
-    <div className={styles.section} ref={ref} data-theme="light">
+    <div className={styles.section} ref={ref}>
       <p className={styles.headline} data-reveal>
         SIEMPRE
       </p>

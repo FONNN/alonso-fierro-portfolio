@@ -1,12 +1,7 @@
-/* z-index por encima de las secciones (z-index:1) a propósito: así
-   también se ve sobre AlwaysUpdated, que tiene fondo opaco propio —
-   antes, detrás, quedaba tapado ahí. Se mantiene debajo del Nav
-   (z-index:10). `pointer-events: none` para que nunca bloquee clics
-   aunque visualmente cruce sobre un botón o link. */
 .layer {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 0;
   overflow: hidden;
   pointer-events: none;
 }
