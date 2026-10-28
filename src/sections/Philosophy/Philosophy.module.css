@@ -2,7 +2,9 @@
   position: relative;
   z-index: 1;
   overflow: hidden;
-  background-color: var(--color-bg);
+  /* Sin fondo propio: useColumnParallax ahora anima el de <body>
+     (ver el hook), así esta sección deja pasar ese color en vez de
+     tapar a Reflector detrás con su propia caja opaca. */
   padding: var(--space-section) var(--space-page-x) var(--space-section-sm);
   /* Más alto a propósito: el scrub de color y el parallax de columnas
      necesitan un tramo de scroll largo para notarse — en una sección

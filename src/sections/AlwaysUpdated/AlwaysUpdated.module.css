@@ -2,11 +2,10 @@
   position: relative;
   z-index: 1;
   padding: var(--space-section) var(--space-page-x) 0;
-  /* Tema invertido fijo, igual que el Footer que viene justo después:
-     al ser la última sección oscura antes de él, el corte hacia esta
-     sección YA es el cambio de tema oscuro->claro que se busca — no
-     hace falta animar nada, con que sea estática alcanza. */
-  background: var(--color-fg);
+  /* Sin fondo propio (igual que el Footer que viene justo después):
+     el scrub de Philosophy (useColumnParallax, ver ese hook) ya dejó
+     <body> en blanco antes de llegar acá, así que solo hace falta fijar
+     el color de texto para el tema invertido. */
   color: var(--color-bg);
 }
 

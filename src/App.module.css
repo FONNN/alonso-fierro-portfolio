@@ -15,11 +15,3 @@
   overflow-x: clip;
   max-width: 100%;
 }
-
-/* El pañuelo (ParticleVeil) va adentro de main para que su `inset:0`
-   mida solo hasta donde llega el contenido de main (hasta
-   AlwaysUpdated) y no siga hasta el Footer — ese ya tiene su propio
-   fondo claro, donde el verde del pañuelo no se vería bien. */
-.main {
-  position: relative;
-}
