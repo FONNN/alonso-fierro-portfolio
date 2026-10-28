@@ -13,6 +13,8 @@ interface HighlightsGalleryProps {
   slides: HighlightsSlide[];
   /** Milisegundos entre avances automáticos. */
   autoplayMs?: number;
+  /** URL mostrada en la barra del navegador; si no se pasa, se omite. */
+  siteUrl?: string;
 }
 
 const AUTOPLAY_MS_DEFAULT = 5000;
@@ -34,7 +36,7 @@ const AUTOPLAY_MS_DEFAULT = 5000;
  * equivalente — como el clon es visualmente idéntico, el salto es
  * imperceptible y el scroll se siente continuo en ambas direcciones.
  */
-export function HighlightsGallery({ slides, autoplayMs = AUTOPLAY_MS_DEFAULT }: HighlightsGalleryProps) {
+export function HighlightsGallery({ slides, autoplayMs = AUTOPLAY_MS_DEFAULT, siteUrl }: HighlightsGalleryProps) {
   const trackRef = useRef<HTMLUListElement>(null);
   const slideRefs = useRef<(HTMLLIElement | null)[]>([]);
   const [current, setCurrent] = useState(0);
@@ -127,7 +129,16 @@ export function HighlightsGallery({ slides, autoplayMs = AUTOPLAY_MS_DEFAULT }: 
 
   return (
     <div className={styles.gallery}>
-      <ul className={styles.track} ref={trackRef}>
+      <div className={styles.browserFrame}>
+        <div className={styles.chromeBar} aria-hidden="true">
+          <span className={styles.chromeDots}>
+            <span className={styles.chromeDot} />
+            <span className={styles.chromeDot} />
+            <span className={styles.chromeDot} />
+          </span>
+          {siteUrl && <span className={styles.chromeUrl}>{siteUrl.replace(/^https?:\/\//, '')}</span>}
+        </div>
+        <ul className={styles.track} ref={trackRef}>
         {extended.map((slide, index) => {
           const isClone = slide.key === 'clone-start' || slide.key === 'clone-end';
           return (
@@ -151,7 +162,8 @@ export function HighlightsGallery({ slides, autoplayMs = AUTOPLAY_MS_DEFAULT }: 
             </li>
           );
         })}
-      </ul>
+        </ul>
+      </div>
 
       <div className={styles.controls}>
         <button

@@ -4,6 +4,56 @@
   gap: 1.25rem;
 }
 
+/* Marco de ventana de navegador: la captura deja de verse como un
+   bloque de imagen suelto y pasa a leerse como una demo real del
+   sitio. El borde/radio exterior vive acá (no en .track/.slide), así
+   que la barra superior y el área de la captura quedan recortadas
+   como una sola pieza. */
+.browserFrame {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--surface-1);
+}
+
+.chromeBar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.chromeDots {
+  display: flex;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+/* Puntitos neutros, no semáforo rojo/amarillo/verde: el verde es el
+   único acento del sitio (y el dorado, el único en AlwaysUpdated) —
+   un semáforo de colores reales rompería esa regla. */
+.chromeDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-faint);
+}
+
+.chromeUrl {
+  flex: 1;
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--color-muted-strong);
+  background: var(--surface-1);
+  border-radius: var(--radius-pill);
+  padding: 0.2rem 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* overflow-x + scroll-snap nativos: es lo que hace que esto funcione
    igual de bien en mobile (scroll táctil real, gratis) que en desktop
    (rueda/trackpad), sin necesitar drag-a-mano ni librerías de swipe. */
@@ -15,7 +65,6 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  border-radius: var(--radius-xl);
   /* Oculta la scrollbar nativa sin quitarle la funcionalidad. */
   scrollbar-width: none;
 }
@@ -29,8 +78,6 @@
   flex: 0 0 100%;
   scroll-snap-align: center;
   aspect-ratio: 16 / 9;
-  border-radius: var(--radius-xl);
-  overflow: hidden;
   background: var(--surface-1);
 }
 

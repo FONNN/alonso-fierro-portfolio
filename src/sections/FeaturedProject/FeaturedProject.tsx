@@ -33,7 +33,7 @@ export function FeaturedProject() {
 
       {slides.length > 0 && (
         <div className={styles.galleryWrap} data-reveal>
-          <HighlightsGallery slides={slides} />
+          <HighlightsGallery slides={slides} siteUrl={featuredProject.url} />
         </div>
       )}
 

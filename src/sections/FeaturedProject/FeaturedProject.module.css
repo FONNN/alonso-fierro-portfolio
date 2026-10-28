@@ -17,13 +17,15 @@
   margin-top: 2rem;
 }
 
-/* Solo en desktop: en mobile la galería se ve bien a ancho completo,
-   pero en pantallas grandes el bloque se sentía demasiado dominante.
-   Reducción acumulada: 100% -> 85% (-15%) -> 76.5% (-10% más),
-   centrada dentro de la sección. */
+/* Solo en desktop: en mobile la galería se ve bien a ancho completo.
+   En desktop ahora es un marco de navegador (ver HighlightsGallery),
+   no un bloque de imagen suelto, así que se trata como una "ventana"
+   de tamaño fijo en vez de escalar con el viewport: min(50%, 640px)
+   evita que vuelva a crecer sin control en monitores grandes (en
+   1920px+ el 76.5% anterior superaba los 1300px de ancho). */
 @media (min-width: 720px) {
   .galleryWrap {
-    max-width: 76.5%;
+    max-width: min(50%, 640px);
     margin-inline: auto;
   }
 }
