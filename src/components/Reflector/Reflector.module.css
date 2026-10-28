@@ -44,6 +44,17 @@
   height: 100%;
 }
 
+/* En mobile la esfera ocupa mucho más viewport relativo (el piso de
+   480px del clamp en .wrapper es casi tan ancho como la pantalla), así
+   que la constelación nítida compite de cerca con el texto. Un blur
+   chico la deja como mancha de luz en movimiento — sigue leyéndose
+   como "algo pasa ahí" sin pedir que la mires. */
+@media (max-width: 719.98px) {
+  .sphereCanvas {
+    filter: blur(3px);
+  }
+}
+
 /* --color-accent en rgb, para el resto del sitio (fondo oscuro). */
 .green {
   background: radial-gradient(circle, rgba(61, 220, 90, 0.4) 0%, rgba(61, 220, 90, 0.14) 45%, transparent 72%);
