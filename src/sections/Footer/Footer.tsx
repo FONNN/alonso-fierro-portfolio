@@ -56,7 +56,7 @@ export function Footer() {
       </div>
 
       <p className={styles.legal} data-reveal>
-        © {year} {site.name}
+        © {year} Furastudio. Todos los derechos reservados.
       </p>
     </footer>
   );

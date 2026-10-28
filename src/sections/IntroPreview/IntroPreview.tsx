@@ -48,7 +48,7 @@ export function IntroPreview() {
   // fade-out al salir) en vez de animarse una sola vez, a pedido
   // explícito — el resto de la sección (headline) sigue con el
   // comportamiento por defecto de una sola vez.
-  const gridRef = useScrollReveal<HTMLDivElement>({ repeat: true, stagger: 0.06 });
+  const gridRef = useScrollReveal<HTMLDivElement>({ repeat: true, stagger: 0.14, y: 90 });
 
   return (
     <div className={styles.section} ref={ref}>

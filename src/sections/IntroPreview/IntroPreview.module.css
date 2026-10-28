@@ -16,6 +16,17 @@
   max-width: 620px;
 }
 
+/* Solo en desktop: el alto sigue atado a 42vh (ver .bento más abajo,
+   altura explícita en vez de aspect-ratio) para que se achique solo en
+   ventanas bajas, pero el ancho ahora es independiente de eso — más
+   ancho que el cuadrado anterior, para que el gap más grande de abajo
+   tenga espacio sin apretar los tiles. */
+@media (min-width: 720px) {
+  .bentoWrap {
+    max-width: 640px;
+  }
+}
+
 /* Grilla de 6x6 (ver IntroPreview.tsx para qué imagen va en cada
    área): fila superior = 'top1'/'top2', dos celdas anchas (3x2, misma
    proporción) para mostrar la imagen completa sin recortarla a un
@@ -66,6 +77,19 @@
 
   .tile[data-desktop-only] {
     display: none;
+  }
+}
+
+@media (min-width: 720px) {
+  .bento {
+    /* Gap casi el doble (0.6rem -> 1.1rem): más espacio negativo entre
+       tiles. aspect-ratio se suelta (ver .bentoWrap, ahora más ancho
+       que alto) y el alto queda explícito acá, no derivado del ancho —
+       mismo criterio de antes (42vh) para seguir achicándose en
+       ventanas bajas. */
+    gap: 1.1rem;
+    aspect-ratio: auto;
+    height: min(420px, 42vh);
   }
 }
 
