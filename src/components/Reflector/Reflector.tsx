@@ -16,10 +16,12 @@ import styles from './Reflector.module.css';
  * suave entre colores en CSS, así que se cruzan en opacidad dos
  * capas fijas — eso sí anima bien.
  *
- * `IntersectionObserver` en vez de escuchar scroll a mano: se apaga
- * al acercarse al Footer, y cambia de color mientras AlwaysUpdated
- * (la sección de tema claro, marcada con `data-theme="light"`) está
- * en pantalla.
+ * El fade hacia el Footer usa un scrub de ScrollTrigger (no un toggle
+ * de IntersectionObserver): así la opacidad avanza con el scroll
+ * mismo en vez de saltar de golpe. El cambio de color en cambio sigue
+ * con IntersectionObserver, mientras AlwaysUpdated (la sección de
+ * tema claro, marcada con `data-theme="light"`) está en pantalla —
+ * ahí sí es un cambio binario, no algo que deba sentirse gradual.
  *
  * La animación de "respiración" (scale) va en un div interno, nunca
  * en el que tiene `position: fixed`: confirmado en Chromium que un
@@ -33,30 +35,42 @@ export function Reflector() {
   const breatheRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    const el = breatheRef.current;
-    if (!el) return;
-    gsap.to(el, {
-      scale: 1.1,
-      duration: 7,
-      ease: 'focusPull',
-      yoyo: true,
-      repeat: -1,
-      transformOrigin: 'center',
-    });
+    const breathe = breatheRef.current;
+    if (breathe) {
+      gsap.to(breathe, {
+        scale: 1.1,
+        duration: 7,
+        ease: 'focusPull',
+        yoyo: true,
+        repeat: -1,
+        transformOrigin: 'center',
+      });
+    }
+
+    const wrapper = wrapperRef.current;
+    const footer = document.getElementById('contacto');
+    if (wrapper && footer) {
+      // Scrub, no toggle: la opacidad sigue el progreso de scroll, así
+      // se difumina en el instante real en que el footer asoma, en vez
+      // de saltar a 0 cuando ya está lejos (la sensación de "corte").
+      gsap.to(wrapper, {
+        opacity: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: footer,
+          start: 'top bottom',
+          end: 'top 55%',
+          scrub: true,
+        },
+      });
+    }
   }, []);
 
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
 
-    const footer = document.getElementById('contacto');
     const lightSection = document.querySelector('[data-theme="light"]');
-
-    const footerObserver = new IntersectionObserver(
-      ([entry]) => el.classList.toggle(styles.hidden, entry.isIntersecting),
-      { rootMargin: '0px 0px -200px 0px' },
-    );
-    if (footer) footerObserver.observe(footer);
 
     const themeObserver = new IntersectionObserver(
       ([entry]) => el.classList.toggle(styles.light, entry.isIntersecting),
@@ -65,7 +79,6 @@ export function Reflector() {
     if (lightSection) themeObserver.observe(lightSection);
 
     return () => {
-      footerObserver.disconnect();
       themeObserver.disconnect();
     };
   }, []);

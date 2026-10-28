@@ -14,7 +14,14 @@ import styles from './Reflector.module.css';
  */
 const PARTICLE_COUNT = 110;
 const SPHERE_RADIUS_RATIO = 0.42;
-const ROTATION_SPEED = 0.00035;
+// El giro ambiental es casi imperceptible a propósito: el movimiento
+// real que se nota es el del scroll (ver SCROLL_ROTATION_FACTOR) y el
+// bamboleo vertical (FLOAT_*), que juntos dan la sensación de "flota"
+// en vez de "gira solo".
+const IDLE_ROTATION_SPEED = 0.00008;
+const SCROLL_ROTATION_FACTOR = 0.0009;
+const FLOAT_AMPLITUDE = 10;
+const FLOAT_SPEED = 0.0006;
 // 0.5 conectaba casi cualquier par de puntos: red densa tapando texto
 // detrás (ej. "AL DÍA."). 0.27 se quedó corto (casi sin líneas). 0.34
 // es el punto medio: se lee la constelación sin volverse malla sólida.
@@ -100,6 +107,7 @@ export function ParticleSphere({ wrapperRef }: ParticleSphereProps) {
 
     let angle = 0;
     let lastTime = performance.now();
+    let lastScrollY = window.scrollY;
     let frameId = 0;
 
     const projected = particles.map(() => ({ sx: 0, sy: 0, scale: 0 }));
@@ -107,7 +115,9 @@ export function ParticleSphere({ wrapperRef }: ParticleSphereProps) {
     const draw = (time: number) => {
       const dt = time - lastTime;
       lastTime = time;
-      angle += ROTATION_SPEED * dt;
+      const scrollDelta = window.scrollY - lastScrollY;
+      lastScrollY = window.scrollY;
+      angle += IDLE_ROTATION_SPEED * dt + scrollDelta * SCROLL_ROTATION_FACTOR;
 
       ctx.clearRect(0, 0, width, height);
 
@@ -115,7 +125,9 @@ export function ParticleSphere({ wrapperRef }: ParticleSphereProps) {
       const [r, g, b] = isLight ? [212, 175, 55] : [61, 220, 90];
 
       const cx = width / 2;
-      const cy = height / 2;
+      // Bamboleo vertical lento, independiente del giro: es lo que lee
+      // como "flotando" en vez de solo "rotando en el sitio".
+      const cy = height / 2 + Math.sin(time * FLOAT_SPEED) * FLOAT_AMPLITUDE;
       const radiusPx = Math.min(width, height) * SPHERE_RADIUS_RATIO;
       const focal = radiusPx * 2.2;
       const cos = Math.cos(angle);

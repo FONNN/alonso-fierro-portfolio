@@ -10,13 +10,11 @@
      delante de ese fondo global, sin tapar texto ni imágenes. */
   z-index: 0;
   pointer-events: none;
-  transition: opacity 0.8s cubic-bezier(0.52, 0.01, 0, 1);
 }
 
-/* Se apaga al acercarse al Footer (ver Reflector.tsx, IntersectionObserver). */
-.wrapper.hidden {
-  opacity: 0;
-}
+/* El fade hacia el Footer ya no es un toggle: GSAP anima `opacity`
+   inline con scrub de scroll (ver Reflector.tsx) para que se difumine
+   en el mismo instante en que el footer asoma, sin "corte". */
 
 /* Recibe el scale animado por GSAP — nunca el propio .wrapper, ver
    comentario en Reflector.tsx. */
@@ -35,13 +33,16 @@
 }
 
 /* Después de .glow en el DOM a propósito: así pinta encima y queda
-   nítida en vez de heredar el blur(70px) de los spans. */
+   nítida en vez de heredar el blur(70px) de los spans. Blur propio muy
+   leve (no 0): suaviza el contraste de la constelación contra el
+   contenido real, que así se lee más "duro"/definido en comparación. */
 .sphereCanvas {
   position: absolute;
   inset: 0;
   display: block;
   width: 100%;
   height: 100%;
+  filter: blur(0.6px);
 }
 
 /* En mobile la esfera ocupa mucho más viewport relativo (el piso de
