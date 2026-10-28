@@ -1,0 +1,66 @@
+.wrapper {
+  position: fixed;
+  top: 10%;
+  right: -14%;
+  width: clamp(480px, 55vw, 820px);
+  height: clamp(480px, 55vw, 820px);
+  /* Ya ninguna sección tiene fondo propio (ver Philosophy/AlwaysUpdated/
+     Footer: el color de tema vive en <body>, debajo de todo) — con 0
+     alcanza para quedar detrás del contenido real (secciones en 1) y
+     delante de ese fondo global, sin tapar texto ni imágenes. */
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 0.8s cubic-bezier(0.52, 0.01, 0, 1);
+}
+
+/* Se apaga al acercarse al Footer (ver Reflector.tsx, IntersectionObserver). */
+.wrapper.hidden {
+  opacity: 0;
+}
+
+/* Recibe el scale animado por GSAP — nunca el propio .wrapper, ver
+   comentario en Reflector.tsx. */
+.breathe {
+  position: absolute;
+  inset: 0;
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 50%;
+  filter: blur(70px);
+  transition: opacity 0.8s cubic-bezier(0.52, 0.01, 0, 1);
+}
+
+/* Después de .glow en el DOM a propósito: así pinta encima y queda
+   nítida en vez de heredar el blur(70px) de los spans. */
+.sphereCanvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --color-accent en rgb, para el resto del sitio (fondo oscuro). */
+.green {
+  background: radial-gradient(circle, rgba(61, 220, 90, 0.4) 0%, rgba(61, 220, 90, 0.14) 45%, transparent 72%);
+  opacity: 1;
+}
+
+/* Dorado — único lugar del sitio con este color, a propósito, para
+   marcar el cambio a AlwaysUpdated (tema claro) como un momento distinto. */
+.gold {
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.55) 0%, rgba(212, 175, 55, 0.22) 45%, transparent 72%);
+  opacity: 0;
+}
+
+.wrapper.light .green {
+  opacity: 0;
+}
+
+.wrapper.light .gold {
+  opacity: 1;
+}

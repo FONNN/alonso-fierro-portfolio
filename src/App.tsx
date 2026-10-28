@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import { AmbientGlow } from './components/AmbientGlow/AmbientGlow';
-import { GuideLines } from './components/GuideLines/GuideLines';
+import { Reflector } from './components/Reflector/Reflector';
 import { Nav } from './sections/Nav/Nav';
 import { Hero } from './sections/Hero/Hero';
 import { IntroPreview } from './sections/IntroPreview/IntroPreview';
@@ -19,8 +18,7 @@ function App() {
 
   return (
     <div className={styles.root}>
-      <AmbientGlow />
-      <GuideLines />
+      <Reflector />
       <Nav />
       <main>
         <Hero />

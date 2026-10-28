@@ -94,8 +94,12 @@ export function useColumnParallax<T extends HTMLElement>(
         timeline.to(column, { y: -distance * speed, ease: 'none', duration: 1 }, 0);
       });
 
+      // En <body>, no en `section`: así el cambio de tema queda en una
+      // sola capa global (en vez de un corte duro entre la sección y la
+      // siguiente) y Reflector puede quedar detrás de TODO el contenido
+      // sin que ninguna sección necesite su propio fondo opaco.
       timeline.to(
-        section,
+        document.body,
         { backgroundColor: backgroundTo, ease: 'none', duration: colorDuration },
         colorStart,
       );

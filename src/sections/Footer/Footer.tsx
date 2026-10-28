@@ -3,8 +3,6 @@ import { useScrollReveal } from '../../hooks/useScrollReveal';
 import logoDesktop from '../../assets/logo/logo-desktop.svg';
 import styles from './Footer.module.css';
 
-const BOOKING_URL = 'https://calendar.app.google/fzyqRiMxs83sZEh59';
-
 export function Footer() {
   const ref = useScrollReveal<HTMLDivElement>({ y: 40, stagger: 0.07 });
   const year = new Date().getFullYear();
@@ -30,7 +28,7 @@ export function Footer() {
 
       <div className={styles.contact} data-reveal>
         <a
-          href={BOOKING_URL}
+          href={site.bookingUrl}
           target="_blank"
           rel="noopener noreferrer"
           className={styles.cta}

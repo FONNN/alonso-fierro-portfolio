@@ -1,17 +1,10 @@
-/* Único punto del sitio con tema invertido fijo (no animado en scroll,
-   a diferencia de Philosophy): fondo claro, texto oscuro. Es el cierre
-   del sitio y el lugar del CTA principal, así que se separa a
-   propósito del resto (todo oscuro) para que se note como un momento
-   distinto, no un accidente de estilo. */
+/* Sin fondo propio: para cuando se llega acá, el scrub de Philosophy
+   (useColumnParallax) ya dejó <body> en blanco, así que solo hace
+   falta el color de texto para el tema invertido. */
 .footer {
   position: relative;
   z-index: 1;
-  /* padding, no margin: un margin-top dejaría un hueco FUERA del fondo
-     blanco del footer, donde asomaría el fondo oscuro del body detrás
-     (invisible antes de invertir AlwaysUpdated, visible ahora como
-     franja negra entre dos secciones blancas). */
   padding-top: clamp(4rem, 12vw, 10rem);
-  background: var(--color-fg);
   color: var(--color-bg);
 }
 

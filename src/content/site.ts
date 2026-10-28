@@ -16,6 +16,7 @@ export const site = {
   email: 'robertofierrourrutia@gmail.com',
   available: true,
   location: 'Remoto',
+  bookingUrl: 'https://calendar.app.google/fzyqRiMxs83sZEh59',
 };
 
 export interface ProjectHighlight {
