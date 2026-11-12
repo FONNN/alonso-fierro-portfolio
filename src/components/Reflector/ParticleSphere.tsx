@@ -160,17 +160,22 @@ export function ParticleSphere({ wrapperRef }: ParticleSphereProps) {
         proj.scale = scale;
       }
 
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 1.3;
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const a = particles[i];
-          const b = particles[j];
-          const d3 = Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
+          const q = particles[j];
+          const d3 = Math.hypot(a.x - q.x, a.y - q.y, a.z - q.z);
           if (d3 < CONNECT_DISTANCE) {
             const pa = projected[i];
             const pb = projected[j];
             const depth = (pa.scale + pb.scale) / 2;
-            const alpha = (1 - d3 / CONNECT_DISTANCE) * 0.22 * depth;
+            // Sin los puntos, las líneas cargan solas todo el peso visual
+            // de la esfera — 0.22 (pensado para convivir con los puntos)
+            // quedaba casi invisible. 0.45 mantiene el mismo
+            // CONNECT_DISTANCE (misma cantidad de líneas, mismo riesgo de
+            // malla sobre texto ya resuelto antes), solo más opacas.
+            const alpha = (1 - d3 / CONNECT_DISTANCE) * 0.45 * depth;
             ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
             ctx.beginPath();
             ctx.moveTo(pa.sx, pa.sy);
@@ -178,15 +183,6 @@ export function ParticleSphere({ wrapperRef }: ParticleSphereProps) {
             ctx.stroke();
           }
         }
-      }
-
-      for (const p of projected) {
-        const alpha = Math.min(1, p.scale) * 0.9;
-        const size = Math.max(1, p.scale * 2.2);
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-        ctx.beginPath();
-        ctx.arc(p.sx, p.sy, size, 0, Math.PI * 2);
-        ctx.fill();
       }
 
       frameId = requestAnimationFrame(draw);
