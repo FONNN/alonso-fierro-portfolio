@@ -13,7 +13,7 @@
 export const site = {
   name: 'Alonso Fierro',
   role: 'Desarrollador Web Full-Stack',
-  email: 'robertofierrourrutia@gmail.com',
+  email: 'contacto@furastudio.org',
   available: true,
   location: 'Remoto',
   bookingUrl: 'https://calendar.app.google/fzyqRiMxs83sZEh59',
