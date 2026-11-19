@@ -23,7 +23,7 @@
    tenga espacio sin apretar los tiles. */
 @media (min-width: 720px) {
   .bentoWrap {
-    max-width: 640px;
+    max-width: 760px;
   }
 }
 
@@ -49,7 +49,6 @@
 }
 
 .tile {
-  border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--surface-1);
   border: 1px solid var(--border-subtle);
@@ -89,7 +88,7 @@
        ventanas bajas. */
     gap: 1.1rem;
     aspect-ratio: auto;
-    height: min(420px, 42vh);
+    height: min(520px, 46vh);
   }
 }
 

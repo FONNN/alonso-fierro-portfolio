@@ -1,18 +1,29 @@
+/* Alto atado al viewport menos el Nav (114px en escritorio, medido:
+   el Nav no es fluido, son paddings/line-heights fijos) para que el
+   Hero ocupe literal la primera pantalla y centrar su contenido ahí
+   adentro — si no, con la altura natural del contenido (~500-550px)
+   sobraba espacio debajo y se alcanzaba a ver el borde de IntroPreview
+   ya en la carga inicial, compitiendo por atención con el Hero. */
 .hero {
   position: relative;
   z-index: 1;
   padding: 0 var(--space-page-x) var(--space-section-sm);
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 0.5rem;
+  min-height: calc(100vh - 114px);
+  min-height: calc(100dvh - 114px);
 }
 
-/* En mobile el Nav queda sticky (ver Nav.module.css) — este padding le
-   da al Hero un respiro deliberado debajo, en vez de depender solo del
-   espacio que deja el propio Nav. */
+/* En mobile el Nav queda sticky (ver Nav.module.css, 83px medidos acá)
+   — este padding le da al Hero un respiro deliberado debajo, en vez de
+   depender solo del espacio que deja el propio Nav. */
 @media (max-width: 719.98px) {
   .hero {
     padding-top: 2rem;
+    min-height: calc(100vh - 83px);
+    min-height: calc(100dvh - 83px);
   }
 }
 

@@ -1,0 +1,147 @@
+/* Grid de 6 cupos, solo en desktop: en mobile (ver abajo) se vuelve una
+   columna con únicamente los proyectos reales — los 4 cupos fantasma
+   son un recurso de escritorio, donde sí hay espacio de sobra. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: 170px;
+  gap: 1.25rem;
+}
+
+@media (max-width: 719.98px) {
+  .grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  /* .tile.ghost (no solo .ghost): misma especificidad que la regla
+     `display:flex` de .tile de más abajo, pero compuesta con .ghost
+     también — si no, al tener igual especificidad que .tile y
+     aparecer antes en el archivo, .tile (display:flex) termina
+     ganando el empate por orden de aparición y el display:none nunca
+     se aplicaba. */
+  .tile.ghost {
+    display: none;
+  }
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  /* Sin esto, un item de grid/flex no se achica bajo el tamaño de su
+     contenido (regla de min-height:auto por defecto) — con una imagen
+     de miles de px de alto adentro, el tile crecía para acomodarla en
+     vez de quedar fijo al alto de fila que le da la grilla. */
+  min-height: 0;
+  overflow: hidden;
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+}
+
+.tile:hover {
+  border-color: var(--border-strong);
+}
+
+.tileLg {
+  grid-column: span 7;
+  grid-row: span 2;
+}
+
+.tileMd {
+  grid-column: span 5;
+  grid-row: span 2;
+}
+
+/* Cupo vacío: mismo radio/proporción que un tile real, pero
+   transparente y de borde punteado — se nota que ahí "va algo" sin
+   inventar contenido. Tamaños mixtos (3 chicos + 1 ancho) a propósito,
+   para que el conjunto de 6 lea como bento asimétrico y no como una
+   grilla pareja. */
+.ghost {
+  background: transparent;
+  border: 1px dashed var(--border-subtle);
+}
+
+.ghostSm {
+  grid-column: span 4;
+  grid-row: span 1;
+}
+
+.ghostWide {
+  grid-column: span 12;
+  grid-row: span 1;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.imageWrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--surface-1);
+}
+
+/* Ancho 100%, alto natural (mucho más alto que el recorte visible): es
+   lo que permite el "paneo" vertical de abajo. translateY en % es
+   relativo al alto de la propia imagen, no del contenedor, así que el
+   mismo -50% funciona sin importar cuánto más angosto o ancho quede el
+   tile en distintos anchos de pantalla. */
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: translateY(0%);
+}
+
+@keyframes pan {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.imageWrap.panning .image {
+  animation: pan 14s ease-in-out infinite alternate;
+}
+
+.meta {
+  flex: 0 0 auto;
+  padding: 1.1rem 1.25rem 1.25rem;
+}
+
+.category {
+  font-size: var(--fs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 0.5rem;
+}
+
+.name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.4rem;
+}
+
+.tagline {
+  font-size: var(--fs-body);
+  color: var(--color-body);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-fg);
+  outline-offset: -2px;
+}

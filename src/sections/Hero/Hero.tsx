@@ -17,18 +17,18 @@ export function Hero() {
       <h1 className={styles.headingReset}>
         <div className={styles.row}>
           <span className={styles.title} data-reveal>
-            TU PRÓXIMO
+            WEB HECHA
           </span>
           <span className={styles.microLabel} data-reveal>
-            FULL-STACK
+            DESARROLLO CON IA
             <br />
-            REACT · NODE.JS
+            ASTRO · REACT
           </span>
         </div>
 
         <div className={`${styles.row} ${styles.rowCenter}`}>
           <span className={styles.title} data-reveal>
-            DESARROLLADOR
+            A MANO, NO
           </span>
           <span className={styles.badge} data-reveal>
             <span className={styles.badgeDot} />
@@ -37,7 +37,7 @@ export function Hero() {
         </div>
 
         <span className={styles.title} data-reveal>
-          WEB.
+          CON PLANTILLAS.
         </span>
       </h1>
 

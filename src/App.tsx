@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Reflector } from './components/Reflector/Reflector';
+import { WhatsAppButton } from './components/WhatsAppButton/WhatsAppButton';
 import { Nav } from './sections/Nav/Nav';
 import { Hero } from './sections/Hero/Hero';
 import { IntroPreview } from './sections/IntroPreview/IntroPreview';
@@ -19,6 +20,7 @@ function App() {
   return (
     <div className={styles.root}>
       <Reflector />
+      <WhatsAppButton />
       <Nav />
       <main>
         <Hero />
