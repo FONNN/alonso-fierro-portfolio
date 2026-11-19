@@ -32,7 +32,7 @@ touch "$LOCK"
   trap 'rm -f .git/deploy.lock' EXIT
   {
     echo "=== $(date -Iseconds) deploy commit $(git rev-parse --short HEAD) ==="
-    claude -p "/publicar" --allowedTools "Bash(npm ci:*)" "Bash(npm run build:*)" "mcp__hostinger-hosting__execute"
+    claude -p "/publicar" --allowedTools "Bash(npm ci:*)" "Bash(npm run build:*)" "Bash(curl:*)" "mcp__hostinger-hosting__execute"
     echo "=== fin $(date -Iseconds) ==="
   } >> .git/deploy.log 2>&1
 ) &
