@@ -6,7 +6,7 @@ Cada commit en `master` dispara un deploy automático a `furastudio.org` (Hostin
 
 - `.githooks/post-commit` llama a `scripts/deploy-on-commit.sh`, que lanza `claude -p "/publicar"` **en segundo plano** (no bloquea el commit) si la rama es `master`.
 - `/publicar` (`.claude/commands/publicar.md`) corre `npm ci && npm run build`, verifica `dist/`, y despliega con la herramienta MCP `hosting_deploy` de `hostinger-hosting` — **reemplaza todo el contenido del sitio**, no es incremental.
-- El hook usa un archivo de lock (`.git/deploy.lock`) para no lanzar dos despliegues a la vez.
+- El hook usa un lock (`.git/deploy.lock`, un directorio — `mkdir` es atómico, a diferencia de un archivo) para no lanzar dos despliegues a la vez.
 
 **Omitir el deploy en un commit puntual:**
 ```

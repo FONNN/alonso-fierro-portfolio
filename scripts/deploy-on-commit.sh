@@ -18,18 +18,22 @@ if [ "${SKIP_DEPLOY:-0}" = "1" ]; then
   exit 0
 fi
 
+# mkdir es atómico en POSIX (a diferencia de "test -e" + touch, que
+# deja una ventana entre chequear y crear): confirmado con un caso
+# real, dos commits a segundos de distancia alcanzaron a pasar el
+# chequeo "[ -e ... ]" los dos antes de que ninguno tocara el lock.
 LOCK=".git/deploy.lock"
-if [ -e "$LOCK" ]; then
+if ! mkdir "$LOCK" 2>/dev/null; then
   echo "$(date -Iseconds) deploy ya en curso (lock presente), se omite este commit" >> .git/deploy.log
   exit 0
 fi
-touch "$LOCK"
 
 # shortcut: el lock lo borra el propio proceso de fondo al terminar: si
 # muere sin limpiar (ej. kill -9 o corte de luz), queda huerfano -- en
-# ese caso borrar .git/deploy.lock a mano antes del siguiente commit.
+# ese caso borrar el directorio .git/deploy.lock a mano antes del
+# siguiente commit.
 (
-  trap 'rm -f .git/deploy.lock' EXIT
+  trap 'rmdir .git/deploy.lock' EXIT
   {
     echo "=== $(date -Iseconds) deploy commit $(git rev-parse --short HEAD) ==="
     # MSYS_NO_PATHCONV=1: sin esto, Git Bash reescribe "/publicar" como
