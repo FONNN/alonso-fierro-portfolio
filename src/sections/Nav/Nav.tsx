@@ -94,8 +94,11 @@ export function Nav() {
         />
       </div>
 
+      {/* La disponibilidad ya la dice el badge del Hero — acá se evita
+          repetirla y en vez de eso se nombra el servicio, para que se
+          entienda qué hace Furastudio con solo mirar el nav. */}
       <span className={styles.status} data-reveal>
-        {site.available ? 'Disponible' : 'No disponible'} · {site.location}
+        Desarrollo web · {site.location}
       </span>
 
       <nav className={styles.links} aria-label="Navegación principal" data-reveal>

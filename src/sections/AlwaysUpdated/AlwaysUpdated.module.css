@@ -44,7 +44,6 @@
   height: clamp(80px, 11vw, 100px);
   background: var(--surface-inverted);
   border: 1px solid var(--border-inverted);
-  border-radius: var(--radius-md);
   display: none;
 }
 
