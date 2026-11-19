@@ -24,6 +24,17 @@
   .tile.ghost {
     display: none;
   }
+
+  /* En desktop el alto de .imageWrap lo fija el grid-row del tile
+     (flex:1 dentro de una fila de alto fijo). En mobile el grid pasa a
+     columna sin alto propio, así que flex:1 no tiene contra qué crecer
+     y el wrap terminaba estirándose al alto natural de la captura
+     completa (varias pantallas por tarjeta). aspect-ratio le da un
+     alto explícito e independiente del flex del padre. */
+  .imageWrap {
+    flex: none;
+    aspect-ratio: 16 / 10;
+  }
 }
 
 .tile {
@@ -139,6 +150,17 @@
   color: var(--color-body);
   line-height: 1.5;
   margin: 0;
+  /* Reserva siempre 2 líneas (se note el texto 1 o 2 líneas de largo):
+     sin esto, tileLg/tileMd -con el mismo alto total de grid-row- quedan
+     con un .meta de alto distinto según cuánto wrappee el tagline, y esa
+     diferencia se la come el imageWrap (flex:1), dejando imágenes de
+     alto desparejo entre tarjetas. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 3em;
 }
 
 .link:focus-visible {
