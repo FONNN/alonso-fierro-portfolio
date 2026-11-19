@@ -32,7 +32,12 @@ touch "$LOCK"
   trap 'rm -f .git/deploy.lock' EXIT
   {
     echo "=== $(date -Iseconds) deploy commit $(git rev-parse --short HEAD) ==="
-    claude -p "/publicar" --allowedTools "Bash(npm ci:*)" "Bash(npm run build:*)" "Bash(curl:*)" "mcp__hostinger-hosting__execute"
+    # MSYS_NO_PATHCONV=1: sin esto, Git Bash reescribe "/publicar" como
+    # una ruta de Windows (ej. C:/Program Files/Git/publicar) antes de
+    # que llegue a claude -p -- confirmado en una corrida real del
+    # gancho, donde solo funcionó porque el subproceso adivinó la
+    # intención.
+    MSYS_NO_PATHCONV=1 claude -p "/publicar" --allowedTools "Bash(npm ci:*)" "Bash(npm run build:*)" "Bash(curl:*)" "mcp__hostinger-hosting__execute"
     echo "=== fin $(date -Iseconds) ==="
   } >> .git/deploy.log 2>&1
 ) &
