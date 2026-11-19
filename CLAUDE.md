@@ -2,19 +2,11 @@
 
 ## Despliegue
 
-Cada commit en `master` dispara un deploy automático a `furastudio.org` (Hostinger), vía un hook de git:
+Los commits a `master` **no** disparan deploy automático — se probó esa vía (gancho de post-commit) y se decidió volver a manual, para que el despliegue a `furastudio.org` solo pase cuando se pida explícitamente.
 
-- `.githooks/post-commit` llama a `scripts/deploy-on-commit.sh`, que lanza `claude -p "/publicar"` **en segundo plano** (no bloquea el commit) si la rama es `master`.
-- `/publicar` (`.claude/commands/publicar.md`) corre `npm ci && npm run build`, verifica `dist/`, y despliega con la herramienta MCP `hosting_deploy` de `hostinger-hosting` — **reemplaza todo el contenido del sitio**, no es incremental.
-- El hook usa un lock (`.git/deploy.lock`, un directorio — `mkdir` es atómico, a diferencia de un archivo) para no lanzar dos despliegues a la vez.
+**Desplegar a mano:** `/publicar` desde una sesión de Claude Code en este proyecto.
 
-**Omitir el deploy en un commit puntual:**
-```
-SKIP_DEPLOY=1 git commit -m "wip, no publicar"
-```
+- `.claude/commands/publicar.md` corre `npm ci && npm run build`, verifica `dist/`, y despliega con la herramienta MCP `hosting_deploy` de `hostinger-hosting` (ruta **absoluta** a `dist/`, no relativa) — **reemplaza todo el contenido del sitio**, no es incremental.
+- Después confirma que `https://furastudio.org` responde 200.
 
-**Desplegar a mano** (sin esperar a un commit): `/publicar` desde una sesión de Claude Code en este proyecto.
-
-**Ver qué pasó / errores:** `.git/deploy.log` (se va acumulando, no se limpia solo).
-
-**Nota sobre `core.hooksPath`:** es una config *local* de este clon del repo (`git config core.hooksPath .githooks`), no viaja con el repo. Si cloneas este proyecto en otra máquina, hay que correr ese comando de nuevo ahí para que el hook quede activo.
+No hay gancho de git activo para esto (`core.hooksPath` no está seteado).
