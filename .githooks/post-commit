@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Ver scripts/deploy-on-commit.sh y CLAUDE.md ("Despliegue").
+exec "$(git rev-parse --show-toplevel)/scripts/deploy-on-commit.sh"

@@ -1,0 +1,5 @@
+# Scripts de shell: deben mantener LF aunque Windows (core.autocrlf)
+# normalice el resto del repo a CRLF -- con CRLF, bash falla al
+# ejecutarlos (shebang y comandos quedan con un \r de más).
+*.sh text eol=lf
+.githooks/* text eol=lf
